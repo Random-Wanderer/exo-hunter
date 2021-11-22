@@ -21,8 +21,8 @@ def get_data(n_rows):
         flux = temp[f'flux'].value
         star_dict[f'{kepid}time'] = time
         star_dict[f'{kepid}flux'] = flux
-        with open('raw_data/exoplanet.pkl','wb') as f:
-            pickle.dump(star_dict,f)
+    with open('raw_data/exoplanet.pkl','wb') as f:
+        pickle.dump(star_dict,f)
 
 if __name__ == '__main__':
     print(get_data(n_rows=2))
