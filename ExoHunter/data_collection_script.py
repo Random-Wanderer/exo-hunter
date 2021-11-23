@@ -13,7 +13,7 @@ def get_nb_of_rows(start,stop,type):
         kepids = df_w_nb_of_planet['kepid'][start : stop]
     elif type == 'non_exo':
         df = pd.read_csv('raw_data/non_exo_stars_kepid.csv')
-        kepids = df['Kepler ID']
+        kepids = df['Kepler ID'][start:stop]
     return kepids
 
 
@@ -34,14 +34,19 @@ if __name__ == '__main__':
     # n_slices = 1
     # slices_size = 1
     # origin = 1500
-    start = 0
-    stop = 1
-    type = 'exo'
+    start = 518
+    stop = 1000
+    type = 'non_exo'
     kepids = get_nb_of_rows(start,stop,type)
     for kepid in kepids:
         temp = get_data()
-        with open(f'raw_data/exoplanet{kepid}.pkl','wb') as f:
-            pickle.dump(temp,f)
+        if type == 'exo':
+            with open(f'raw_data/exo/exoplanet{kepid}.pkl','wb') as f:
+                pickle.dump(temp,f)
+        else:
+            with open(f'raw_data/non_exo/exoplanet{kepid}.pkl','wb') as f:
+                pickle.dump(temp,f)
+
     # for i in range(origin,origin + n_slices):
     #     temp = get_data(slices_size*(i-1),slices_size*i)
     #     with open(f'raw_data/exoplanet{i}.pkl','wb') as f:
