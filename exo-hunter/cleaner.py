@@ -2,11 +2,12 @@ import math
 import numpy as np
 import pandas as pd
 
+from exo-hunter.params import *
+
 class Cleaner():
     def __init__(self) -> None:
         pass
 
-    def pred_round(df, threshold=0.5):
-        if df>threshold:
-            return 1
-        return 0
+    def fourier_transform(df):
+        df_fft = np.abs(np.fft.fft(df, axis=1))
+        return df_fft
