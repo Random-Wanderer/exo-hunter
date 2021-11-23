@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # origin = 1500
     start = 501
     stop = 1000
-    type = 'non_exo'
+    type = 'exo'
     kepids = get_nb_of_rows(start,stop,type)
     for kepid in kepids:
         temp = get_data()

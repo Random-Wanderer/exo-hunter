@@ -21,9 +21,3 @@ class Cleaner():
         df_train, df_val = train_test_split(df_train_val, test_size=train_val_split)
 
         return df_train, df_val, df_test
-
-
-    def fourier_transform(df):
-        '''Performs FFT on a dataframe and returns a dataframe'''
-        df_fft = np.abs(np.fft.fft(df, axis=1))
-        return pd.DataFrame(df_fft)
