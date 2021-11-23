@@ -2,8 +2,14 @@
 .coverage
 .ipynb_checkpoints
 .DS_Store
-raw_data/
+<<<<<<< HEAD
+#raw_data/
 **/__pycache__/
 .env
 .python-version
-*.csv
+#*.csv
+=======
+**/__pycache__/
+.env
+.python-version
+>>>>>>> master
