@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 
-from exo-hunter.params import *
+from ExoHunter.params import *
 
 class Trainer():
     def __init__(self) -> None:

@@ -2,7 +2,7 @@ import math
 import numpy as np
 import pandas as pd
 
-from exo-hunter.params import *
+from ExoHunter.params import *
 
 class Cleaner():
     def __init__(self) -> None:
