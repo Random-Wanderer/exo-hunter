@@ -10,7 +10,7 @@ class Trainer():
     def __init__(self) -> None:
         pass
 
-    def low_pass_filter(self, df, n_order=5, cutoff_frac=0.1, sample_freq=1/1800):
+    def low_pass_filter(self, df, n_order=5, cutoff_frac=0.3, sample_freq=1/1800):
         '''
         Low pass filters the input lux curves to remove noise
         '''
