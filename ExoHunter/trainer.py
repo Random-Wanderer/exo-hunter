@@ -2,6 +2,7 @@ import math
 import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix
+from sklearn.preprocessing import Normalizer
 from scipy.signal import butter, filtfilt
 
 from ExoHunter.params import *
@@ -21,8 +22,9 @@ class Trainer():
         '''
         Performs FFT on a dataframe and returns a dataframe
         '''
-        data_fft = np.abs(np.fft.fft(data, axis=1))
-        return pd.DataFrame(data_fft)
+        data_fft = pd.DataFrame(np.abs(np.fft.fft(data, axis=1)))
+        data_fft = data_fft.iloc[:, :(data_fft.shape[1] // 2)]
+        return data_fft
 
     def pred_round(self, data, threshold=0.5):
         if data>threshold:
