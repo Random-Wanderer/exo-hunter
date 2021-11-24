@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import os
 
-from scipy.signal import savgol_filter
 from sklearn.model_selection import train_test_split
 
 from ExoHunter.params import *
@@ -12,12 +11,13 @@ class Cleaner():
     def __init__(self) -> None:
         pass
 
-    def get_data(self, data='kaggle', train_val_split=0.2):
+    def get_data(self, data_name, set_='train', test_size=0.2):
         '''Function that returns train , val, and test dataframes
         for a given data path'''
-        df_train_val = os.path.join('raw_data', *DATA_PATHS[data][0])
-        df_test = os.path.join('raw_data', *DATA_PATHS[data][1])
+        path = os.path.join('raw_data', data_name, FILEPATHS[data_name][TRAIN_OR_TEST[set_]])
+        data = pd.read_csv(path)
+        if set_=='train':
+            data_train, data_val = train_test_split(data, test_size=test_size)
+            return data_train, data_val
+        return data
 
-        df_train, df_val = train_test_split(df_train_val, test_size=train_val_split)
-
-        return df_train, df_val, df_test

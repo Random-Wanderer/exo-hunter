@@ -10,31 +10,25 @@ class Trainer():
     def __init__(self) -> None:
         pass
 
-    def low_pass_filter(self, df, n_order=5, cutoff_frac=0.3, sample_freq=1/1800):
-        '''
-        Low pass filters the input lux curves to remove noise
-        '''
-        nyquist = sample_freq / 2
-        cutoff_hours = 1/cutoff_frac*nyquist*3600
+    def low_pass_filter(self, data, n_order=5, cutoff_frac=0.3, sample_freq=1/1800):
+        nyquist = sample_freq / 2 # 0.5 times the sampling frequency
+        # cutoff_hours = 1/cutoff_frac*nyquist*3600
         b, a = butter(n_order, cutoff_frac, btype='lowpass')
-        df_filtered = filtfilt(b, a, df)
-        return pd.DataFrame(df_filtered)
+        data_filtered = filtfilt(b, a, data)
+        return pd.DataFrame(data_filtered)
 
-    def fourier_transform(df):
+    def fourier_transform(self, data):
         '''
         Performs FFT on a dataframe and returns a dataframe
         '''
-        df_fft = np.abs(np.fft.fft(df, axis=1))
-        return pd.DataFrame(df_fft)
+        data_fft = np.abs(np.fft.fft(data, axis=1))
+        return pd.DataFrame(data_fft)
 
-    def pred_round(df, threshold=0.5):
-        '''
-
-        '''
-        if df>threshold:
+    def pred_round(self, data, threshold=0.5):
+        if data>threshold:
             return 1
         return 0
 
-    def confusion_mat(y_true, y_pred, columns=CONFUSION_COLS, indices=CONFUSION_INDS):
+    def confusion_mat(self, y_true, y_pred, columns=CONFUSION_COLS, indices=CONFUSION_INDS):
         matrix = confusion_matrix(y_true, y_pred)
         return pd.DataFrame(matrix, columns=columns, index=indices)
