@@ -1,6 +1,8 @@
 import math
 import numpy as np
 import pandas as pd
+import os
+from sklearn.model_selection import train_test_split
 
 from ExoHunter.params import *
 
@@ -8,6 +10,10 @@ class Cleaner():
     def __init__(self) -> None:
         pass
 
-    def fourier_transform(df):
-        df_fft = np.abs(np.fft.fft(df, axis=1))
-        return df_fft
+    def get_data(self, data_name, set_='train', test_size=0.2):
+        path = os.path.join('raw_data', data_name, FILEPATHS[data_name][TRAIN_OR_TEST[set_]])
+        data = pd.read_csv(path)
+        if set_=='train':
+            data_train, data_val = train_test_split(data, test_size=test_size)
+            return data_train, data_val
+        return data
