@@ -12,7 +12,7 @@ class Trainer():
 
     def low_pass_filter(data, n_order=5, cutoff_frac=0.3, sample_freq=1/1800):
         nyquist = sample_freq / 2 # 0.5 times the sampling frequency
-        cutoff_hours = 1/cutoff_frac*nyquist*3600
+        # cutoff_hours = 1/cutoff_frac*nyquist*3600
         b, a = butter(n_order, cutoff_frac, btype='lowpass')
         data_filtered = filtfilt(b, a, data)
         return pd.DataFrame(data_filtered)
