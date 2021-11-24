@@ -18,3 +18,8 @@ class Cleaner():
         data_test = pd.read_csv(test_path)
         data_train, data_val = train_test_split(train_data, test_size=test_size)
         return data_train, data_val, data_test
+
+    def get_Xy(data):
+        X = data.drop(columns='LABEL')
+        y = data['LABEL'].map({1:0, 2:1})
+        return X, y
