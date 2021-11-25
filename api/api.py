@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import joblib
 import pandas as pd
 import numpy as np
+import tensorflow
 
 app = FastAPI()
 
@@ -30,7 +31,8 @@ app.add_middleware(
 def predict(inputdata: ItemList):
     extracted_list = inputdata.instances
     X_pred = np.array(extracted_list)
-    np.expand_dims(X_pred, axis=0)
+    X_pred = np.expand_dims(X_pred, axis=0)
+    X_pred = np.expand_dims(X_pred, axis=-1)
     pipeline = joblib.load("rnn_model.joblib")
     y_pred = pipeline.predict(X_pred)
     prediction = y_pred[0]
