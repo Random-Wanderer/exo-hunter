@@ -1,5 +1,3 @@
-import math
-import numpy as np
 import pandas as pd
 import os
 
@@ -16,16 +14,16 @@ class Cleaner():
         minim = temp[temp>-660].count().min()
         return minim
 
-    def get_kaggle_data(self, data_name, test_size=0.2, drive=1):
-        train_path = os.path.join('..', DRIVE[drive], data_name, FILEPATHS[data_name][0])
-        test_path = os.path.join('..', DRIVE[drive], data_name, FILEPATHS[data_name][1])
+    def get_kaggle_data(self, data_name='kaggle', drive=1):
+        train_path = os.path.join(DRIVE[drive], 'raw_data', data_name, FILEPATHS[data_name][0][0])
+        test_path = os.path.join(DRIVE[drive], 'raw_data', data_name, FILEPATHS[data_name][0][1])
         train_data = pd.read_csv(train_path)
         test_data = pd.read_csv(test_path)
         return train_data, test_data
 
     def get_nasa_data(self, data_name='nasa', test_size=0.2, drive=0):
-        exo_path = os.path.join('..', DRIVE[drive], data_name, FILEPATHS[data_name][0][0])
-        non_exo_path = os.path.join('..', DRIVE[drive], data_name, FILEPATHS[data_name][0][1])
+        exo_path = os.path.join(DRIVE[drive], 'raw_data', data_name, FILEPATHS[data_name][0][0])
+        non_exo_path = os.path.join(DRIVE[drive], 'raw_data', data_name, FILEPATHS[data_name][0][1])
         exo_data = pd.read_csv(exo_path)
         non_exo_data = pd.read_csv(non_exo_path)
         exo_data.drop(columns=['Unnamed: 0', 'Unnamed: 0.1'], inplace=True)
@@ -44,22 +42,26 @@ class Cleaner():
 
     def get_raw_data(self, data_name='nasa', test_size=0.2, drive=1):
         if data_name == 'kaggle':
-            return self.get_kaggle_data(test_size=test_size, drive=drive)
+            return self.get_kaggle_data(drive=drive)
         if data_name == 'nasa':
             return self.get_nasa_data(test_size=test_size, drive=drive)
         return None
 
-    def get_proc_data(self, data_name='nasa', test_size=0.2, drive=0):
-        train_path = os.path.join('..', 'processed_data', data_name, FILEPATHS[data_name][1][0])
-        test_path = os.path.join('..', 'processed_data', data_name, FILEPATHS[data_name][1][1])
-        train_data = pd.read_csv(train_path)
-        test_data = pd.read_csv(test_path)
+    def get_proc_data(self, data_name='nasa', drive=0):
+        train_path = os.path.join(DRIVE[drive], 'processed_data', data_name, FILEPATHS[data_name][1][0])
+        test_path = os.path.join(DRIVE[drive], 'processed_data', data_name, FILEPATHS[data_name][1][1])
+        if data_name=='nasa':
+            train_data = pd.read_csv(train_path, index_col='KepID')
+            test_data = pd.read_csv(test_path, index_col='KepID')
+        else:
+            train_data = pd.read_csv(train_path)
+            test_data = pd.read_csv(test_path)
         return train_data, test_data
 
     def get_data(self, data_name='nasa', test_size=0.2, drive=0, raw=0):
         if raw:
             return self.get_raw_data(data_name, test_size, drive)
-        return self.get_proc_data(data_name, test_size, drive)
+        return self.get_proc_data(data_name, drive)
 
     def get_Xy(self, data):
         X = data.drop(columns='LABEL')
