@@ -67,7 +67,7 @@ class Formatter():
         expand = np.expand_dims(data, -1)
         return expand
 
-    def prep_data(self, data, rnn=0):
+    def prep_data(self, data, rnn_model=False):
         '''
         Imputes, Filters, FFTs, and Normalizes the input data in one step
         '''
@@ -75,7 +75,7 @@ class Formatter():
         data_ = self.savgol_filt(data_)
         data_ = self.fourier_transform(data_)
         data_ = self.normalize
-        if rnn:
+        if rnn_model:
             data_ = self.expand_shape(data_)
         return data_
 
@@ -96,7 +96,7 @@ class Formatter():
         curve to a desired length
         '''
         mirrored_data = pd.concat([data, data.iloc[:,::-1]], axis=1)
-        mirrored_data = self.repeat(mirrored_data)
+        mirrored_data = self.repeat(mirrored_data, default_len)
         return pd.DataFrame(mirrored_data)
 
     def mean_pad(self, data, default_len=DEFAULT_LEN):
