@@ -28,6 +28,7 @@ s3fs
 uvicorn
 fastapi
 streamlit
+manim
 
 # utilities
 six>=1.14
