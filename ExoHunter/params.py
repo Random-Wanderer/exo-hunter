@@ -12,3 +12,4 @@ DRIVE = {
     0: '..',
     1: '/content/drive/MyDrive/Colab Notebooks/Awle/exo-hunter'
 }
+DEFAULT_LEN = 18421
