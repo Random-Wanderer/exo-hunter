@@ -14,7 +14,7 @@ class Formatter():
     # Prepping Methods
     def impute(self, data, missing_value=np.nan, strategy='linear'):
         imputer = InterpolationImputer(missing_value, strategy)
-        return imputer.transform(data-1)
+        return imputer.transform(data - data.mean().mean())
 
     def butter_filt(self, data, n_order=5, cutoff_frac=0.3):
         b, a = butter(n_order, cutoff_frac, btype='lowpass')
@@ -34,12 +34,80 @@ class Formatter():
         return data_fft
 
     def prep_data(self, data):
-        data_ = self.impute(data-1)
+        data_ = self.impute(data)
         data_ = self.savgol_filt(data_)
         data_ = self.fourier_transform(data_)
         normer=Normalizer()
         data_ = normer.fit_transform(data_)
         return data_
+
+    # Data Augmentation methods
+    def repeat(self, data, default_len=DEFAULT_LEN):
+        '''
+        Repeats a curve, without smoothing, to a desired length
+        '''
+        new_len = data.iloc[0].shape[0]
+        repeats = (default_len//new_len)+1
+        repeated_data = np.tile(data, repeats)[:, :default_len]
+        return pd.DataFrame(repeated_data)
+
+    def mirror(self, data, default_len=DEFAULT_LEN):
+        '''
+        Mirrors a light curve in time and repeats this mirrored
+        curve to a desired length
+        '''
+        mirrored_data = pd.concat([data, data.iloc[:,::-1]], axis=1)
+        mirrored_data = self.repeat(mirrored_data)
+        return pd.DataFrame(mirrored_data)
+
+    def mean_pad(self, data, default_len=DEFAULT_LEN):
+        '''
+        Pads the ends of a light curve with the mean value of that
+        given light curve to a desired length
+        '''
+        means = data.mean(axis=1)
+        columns = default_len - data.shape[-1]
+        means_df = pd.concat([means]*columns, axis=1, ignore_index=True)
+        padded_data = pd.concat([data, means_df], axis=1, ignore_index=True)
+        return padded_data
+
+    def df_splitter(self, data, n_parts=3):
+        '''
+        Splits a DataFrame into n equal parts by row and returns a list
+        of length n of dataframes, suitable for passing into the augmentation functions
+        '''
+        rows = data.shape[0]
+        sub_rows = rows//n_parts
+        data.sample(frac=1)
+        data_ = []
+        [data_.append(data.iloc[i*sub_rows:(i+1)*sub_rows]) for i in range(n_parts-1)]
+        data_.append(data.iloc[(n_parts-1)*sub_rows:])
+        return data_
+
+    def augment(self, data, n_parts=3, default_len=DEFAULT_LEN):
+        '''
+        Calls the splitter and augmentation methods to augment training data
+        '''
+        data1, data2, data3 = self.df_splitter(data, n_parts)
+        data1 = self.repeat(data1, default_len)
+        data2 = self.mirror(data2, default_len)
+        data3 = self.mean_pad(data3, default_len)
+        data_ = pd.concat([data1, data2, data3])
+        return data_
+
+    def length_check(self, data, strategy='mirror', default_len=DEFAULT_LEN, n_parts=3):
+        assert(isinstance(data, pd.DataFrame))
+        if data.shape[-1] >= default_len:
+            return data.iloc[:,:default_len]
+        if strategy == 'mirror':
+            return self.mirror(data, default_len)
+        elif strategy == 'mean_pad':
+            return self.mean_pad(data, default_len)
+        elif strategy == 'repeat':
+            return self.repeat(data, default_len)
+        elif strategy == 'augment':
+            return self.augment(data, n_parts, default_len)
+
 
     # Post Training methods
     def pred_round(self, data, threshold=0.5):
