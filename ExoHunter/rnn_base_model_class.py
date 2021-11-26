@@ -23,18 +23,18 @@ class RNNModel():
         return train_scale, test_scale
 
 
-    def rnn_model(self):
-        # Model runs Long short term memory(LSTM) RNN nueral network
+    def rnn_model():
         model = Sequential()
 
-        model.add(layers.LSTM(30, activation='tanh', return_sequences=True))
-        model.add(layers.Dropout(0.3))
-        model.add(layers.LSTM(20, activation='tanh', return_sequences=True))
-        model.add(layers.Dropout(0.3))
-        model.add(layers.LSTM(10, activation='tanh', return_sequences=False))
-        model.add(layers.Dense(1, activation='sigmoid'))
+        model.add(layers.LSTM(64, activation='tanh', recurrent_activation= 'tanh',
+                              dropout=0.15, return_sequences= True, input_shape=(18421, 1)))#(rows, column)
+        model.add(layers.LSTM(32, activation='tanh', recurrent_activation= 'tanh', dropout= 0.2,
+                              return_sequences= False))
+        model.add(layers.Dense(10, activation='relu', use_bias= True))
+        model.add(layers.Dropout(0.2))
+        model.add(layers.Dense(1, activation='hard_sigmoid'))
 
-        model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+        model.compile(loss='binary_crossentropy', optimizer= 'rmsprop', metrics=['binary_accuracy'])
 
         return model
 
