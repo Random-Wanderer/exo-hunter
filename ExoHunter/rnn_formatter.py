@@ -7,8 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1aFROxDnWPUpaSqZa0skdeLLFxf_JDPt2
 """
 
-! pip install pyts
-
 from pyts.preprocessing import InterpolationImputer
 from sklearn.preprocessing import Normalizer, StandardScaler
 from scipy.signal import savgol_filter, butter, filtfilt
@@ -34,7 +32,7 @@ class RNNFormatter():
         imputer = InterpolationImputer(missing_value, strategy)
         return imputer.transform(data - data.mean().mean())
 
-    
+
     def butter_filt(self, data, n_order=5, cutoff_frac=0.3):
         # Helps make wave lengths smoother
         b, a = butter(n_order, cutoff_frac, btype='lowpass')
@@ -73,7 +71,7 @@ class RNNFormatter():
         return expand
 
 
-    def process_data(self, data): 
+    def process_data(self, data):
         # Runs the above functions and processes the data
         processed, y = self.get_Xy(data)
         processed = self.impute(processed)
