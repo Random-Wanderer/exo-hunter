@@ -1,16 +1,17 @@
 # Alexis' Ensemble Pipeline
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv1D, MaxPool1D, Flatten, Dense, Dropout
 from tensorflow.keras.metrics import Recall, Precision
+from rnn_model import RNNModel
 from cnn_model import CNNModel
 from formatter import Formatter
+from cleaner import Cleaner
+from params import DEFAULT_LEN
 from sklearn.pipeline import Pipeline
 from sklearn.ensemble import StackingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 import numpy as np
 import pandas as pd
-from cleaner import Cleaner
+
 
 class Trainer():
     def __init__(self, X, y):
@@ -25,12 +26,13 @@ class Trainer():
     def set_pipeline(self):
         """defines the pipeline as a class attribute"""
         cnn_pipeline = Pipeline([
-            ('preparation', Formatter.prep_data()),
+            ('cnn_preparation', Formatter.prep_data()),
             ('cnn_model', CNNModel.build_model())
         ])
 
         rnn_pipeline = Pipeline([
-
+            ('rnn_preparation', Formatter.prep_data()),
+            ('rnn_model', RNNModel.build_model())
         ])
 
         self.pipeline = StackingClassifier(
@@ -54,8 +56,8 @@ class Trainer():
 
 if __name__ == "__main__":
     # get data
-    train_data = pd.read_csv('processed_data/nasa/nasaTrain.csv')
-    test_data = pd.read_csv('processed_data/nasa/nasaTest.csv')
+    train_data = pd.read_csv('processed_data/nasa/nasaTrain.csv',index_col='KepID')
+    test_data = pd.read_csv('processed_data/nasa/nasaTest.csv',index_col='KepID')
     # set X and y
     cleaner = Cleaner()
     X,y = cleaner.get_Xy(train_data)
