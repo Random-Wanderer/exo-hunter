@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix
-from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import Normalizer, StandardScaler
 from scipy.signal import butter, filtfilt, savgol_filter
 from pyts.preprocessing import InterpolationImputer
 
@@ -52,10 +52,22 @@ class Formatter():
         Normalises the incoming light curve along its time axis
         '''
         normer = Normalizer()
-        data_ = normer.fit_transform(data)
-        return data_
+        normalized_data = normer.fit_transform(data)
+        return normalized_data
 
-    def prep_data(self, data):
+    def scaler(self,train_data):
+        '''
+        Scales the input light curve
+        '''
+        std = StandardScaler()
+        scaled_data = std.fit_transform(train_data)
+        return scaled_data
+
+    def expand_shape(self, data):
+        expand = np.expand_dims(data, -1)
+        return expand
+
+    def prep_data(self, data, rnn=0):
         '''
         Imputes, Filters, FFTs, and Normalizes the input data in one step
         '''
@@ -63,6 +75,8 @@ class Formatter():
         data_ = self.savgol_filt(data_)
         data_ = self.fourier_transform(data_)
         data_ = self.normalize
+        if rnn:
+            data_ = self.expand_shape(data_)
         return data_
 
 
@@ -151,7 +165,7 @@ class Formatter():
 
     def confusion_mat(self, y_true, y_pred, columns=CONFUSION_COLS, indices=CONFUSION_INDS):
         '''
-
+        Outputs a confusion matrix of Actual and Predicted positives and negatives
         '''
         matrix = confusion_matrix(y_true, y_pred)
         return pd.DataFrame(matrix, columns=columns, index=indices)
