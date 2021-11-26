@@ -1,10 +1,12 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPool1D, Flatten, Dense, Dropout
 from tensorflow.keras.metrics import Recall, Precision
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
+from tensorflow.keras.callbacks import EarlyStopping
 
 class CNNModel():
-    def __init__(self, input) -> None:
-        self.input_shape = (input.shape[-1],1)
+    def __init__(self, input=(3197,1)) -> None:
+        self.input_shape = input
 
     def build_model(self):
         model = Sequential()
@@ -34,4 +36,4 @@ class CNNModel():
             metrics=['accuracy', Recall(), Precision()]
         )
 
-        return model
+        return KerasClassifier(build_fn=self.build_model, epochs=20, batch_size=32, callbacks=[EarlyStopping(patience=5)])
