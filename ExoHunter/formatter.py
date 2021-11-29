@@ -4,15 +4,15 @@ from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import Normalizer, StandardScaler
 from scipy.signal import butter, filtfilt, savgol_filter
 from pyts.preprocessing import InterpolationImputer
-
-
-from ExoHunter.params import *
+from .params import *
 
 class Formatter():
     def __init__(self) -> None:
         '''
         Initialises Formatter
         '''
+        # self.length_check(X)
+        # self.prep_data(X)
         pass
 
 
