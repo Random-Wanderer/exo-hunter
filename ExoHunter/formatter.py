@@ -5,13 +5,15 @@ from sklearn.preprocessing import Normalizer, StandardScaler
 from scipy.signal import butter, filtfilt, savgol_filter
 from pyts.preprocessing import InterpolationImputer
 
-from ExoHunter.params import *
+from .params import *
 
 class Formatter():
     def __init__(self) -> None:
         '''
         Initialises Formatter
         '''
+        # self.length_check(X)
+        # self.prep_data(X)
         pass
 
 
@@ -74,7 +76,7 @@ class Formatter():
         data_ = self.impute(data)
         data_ = self.savgol_filt(data_)
         data_ = self.fourier_transform(data_)
-        data_ = self.normalize
+        data_ = self.normalize(data_)
         if rnn_model:
             data_ = self.expand_shape(data_)
         return data_
