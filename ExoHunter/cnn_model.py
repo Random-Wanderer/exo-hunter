@@ -3,7 +3,9 @@ from tensorflow.keras.layers import Conv1D, MaxPool1D, Flatten, Dense, Dropout
 from tensorflow.keras.metrics import Recall, Precision
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.optimizers import Adam
 from params import DEFAULT_LEN
+
 
 class CNNModel():
     def __init__(self) -> None:
@@ -41,6 +43,6 @@ class CNNModel():
 
     def classifier(self):
         model = self.build_model()
-        KC_cnn = KerasClassifier(build_fn= lambda: model, epochs=20, batch_size=32, validation_split=0.2, callbacks=[EarlyStopping(patience=5)])
+        KC_cnn = KerasClassifier(build_fn= lambda: model, epochs=20, batch_size=32,validation_split = 0.2, callbacks=[EarlyStopping(patience=5)])
         KC_cnn._estimator_type = "classifier"
         return KC_cnn

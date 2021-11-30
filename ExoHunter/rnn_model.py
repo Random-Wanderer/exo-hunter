@@ -20,7 +20,7 @@ class RNNModel():
         model = Sequential()
 
         model.add(layers.LSTM(64, activation='tanh', recurrent_activation= 'tanh',
-                              dropout=0.15, return_sequences= True, input_shape=(DEFAULT_LEN//2, 1)))#(rows, column)
+                              dropout=0.2, return_sequences= True, input_shape=(DEFAULT_LEN//2, 1)))#(rows, column)
         model.add(layers.LSTM(32, activation='tanh', recurrent_activation= 'tanh', dropout= 0.2,
                               return_sequences= False))
         model.add(layers.Dense(10, activation='relu', use_bias= True))
@@ -33,7 +33,7 @@ class RNNModel():
 
     def classifier(self):
         model = self.build_model()
-        KC_rnn = KerasClassifier(build_fn= lambda: model, epochs=5, batch_size=256, validation_split=0.2, callbacks=[EarlyStopping(patience=3)])
+        KC_rnn = KerasClassifier(build_fn= lambda: model, epochs=2, batch_size=256, validation_split=0.2, callbacks=[EarlyStopping(patience=3)])
         KC_rnn._estimator_type = "classifier"
         return KC_rnn
 
