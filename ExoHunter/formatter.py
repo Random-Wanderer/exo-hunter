@@ -4,8 +4,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import Normalizer, StandardScaler
 from scipy.signal import butter, filtfilt, savgol_filter
 from pyts.preprocessing import InterpolationImputer
-
-from .params import *
+from ExoHunter.params import *
 
 class Formatter():
     def __init__(self) -> None:
@@ -34,7 +33,7 @@ class Formatter():
         data_filtered = filtfilt(b, a, data)
         return pd.DataFrame(data_filtered)
 
-    def savgol_filt(self, data, window=15, n_order=5):
+    def savgol_filt(self, data, window=251, n_order=5):
         '''
         Implements a Savitzky–Golay Low Pass Filtering of the input data
         '''
