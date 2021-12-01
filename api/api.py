@@ -1,4 +1,4 @@
-from os import name
+import os
 from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
 from typing import List
@@ -69,6 +69,7 @@ def predictid(inputdata:Kepid):
     if len(light_curve_data) >= 5:
         light_curve_data = light_curve_data.download_all().stitch()
         light_curve_data = light_curve_data['flux'].value
+        #light_curve_data_send = light_curve_data.tolist() [float(a) for a in maskedarray.flat()]
         X_pred = np.array(light_curve_data)
     else:
         return {"prediction": 'Sorry there is not such kepler id or we were unable to retrieve the data'}
@@ -91,18 +92,21 @@ def predictid(inputdata:Kepid):
         result_prediction = 'This star is likely to NOT have exoplanet'
     else:
         result_prediction = 'This star is LIKELY to have exoplanet(s)'
+    directory_path = os.getcwd()
+    print("My current directory is : " + directory_path)
     database = pd.read_csv('raw_data/keplerid_for_manim.csv')
     database = database[database['kepid'] == kepid]
-    solar_mass = database['sun_mass (solar_mass)']
-    solar_radius = database['sun_radius (solar_radii)']
-    orbital_period = database['orbital_period (days)']
-    planet_star_dist = database['planet_star_dist (AU)']
-    planet_radius = database['planet_radius(to_Earth)']
-    return {"prediction": result_prediction,
+    solar_mass = list(database['sun_mass (solar_mass)'].values)[0]
+    solar_radius = list(database['sun_radius (solar_radii)'].values)[0]
+    orbital_period = list(database['orbital_period (days)'].values)
+    planet_star_dist = list(database['planet_star_dist (AU)'].values)
+    planet_radius = list(database['planet_radius(to_Earth)'].values)
+    result= {"prediction": result_prediction,
             "solar_mass": solar_mass,
             "solar_radius": solar_radius,
             "orbital_period": orbital_period,
             "planet_star_rad": planet_star_dist,
-            "planet_radius": planet_radius,
-            "light_curve_data": light_curve_data
+            "planet_radius": planet_radius
+            #"light_curve_data": light_curve_data_send
             }
+    return result

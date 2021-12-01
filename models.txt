@@ -1,0 +1,3 @@
+model R:75,P:65,A:60
+model1 R:100,P:62,A:62
+model2 R:79,P:66,A:61

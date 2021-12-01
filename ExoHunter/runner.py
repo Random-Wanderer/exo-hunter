@@ -24,22 +24,23 @@ from tensorflow.keras.optimizers import Adam
 from params import DEFAULT_LEN
 from sklearn.metrics import recall_score, precision_score
 import matplotlib.pyplot as plt
+import joblib
 
 
 
-def build_model(activation1='relu',activation2='relu',learning_rate=0.001,dropout_rate=0.2):
+def build_model(activation1='relu',activation2='relu',learning_rate=0.0001,dropout_rate=0.4):
     model = Sequential()
 
     model.add(Conv1D(40, 8, padding='same', activation=activation1, input_shape=(DEFAULT_LEN//2,1)))
     model.add(MaxPool1D(4, padding='same'))
     model.add(Conv1D(40, 4, padding='same', activation=activation1))
     model.add(MaxPool1D(2, padding='same'))
-    model.add(Conv1D(40, 2, padding='same', activation=activation1))
-    model.add(MaxPool1D(2, padding='same'))
+    # model.add(Conv1D(40, 2, padding='same', activation=activation1))
+    # model.add(MaxPool1D(2, padding='same'))
 
     model.add(Flatten())
 
-    model.add(Dense(30, activation=activation2))
+    model.add(Dense(40, activation=activation2))
     model.add(Dropout(dropout_rate))
     model.add(Dense(30, activation=activation2))
     model.add(Dropout(dropout_rate))
@@ -56,6 +57,7 @@ def build_model(activation1='relu',activation2='relu',learning_rate=0.001,dropou
             )
 
     return model
+
 
 
 def plot_history(history):
@@ -119,8 +121,8 @@ if __name__ == "__main__":
     es = EarlyStopping(patience=20,restore_best_weights=True)
     history = model.fit(X, y,
                         validation_split=0.2,
-                        epochs=100,
-                        batch_size=16,
+                        epochs=300,
+                        batch_size=32,
                         verbose=1,
                         callbacks=[es])
 
@@ -128,6 +130,7 @@ if __name__ == "__main__":
 
     X_test = formatter.prep_data(X_test, rnn_model=False)
     model.evaluate(X_test,y_test)
+    joblib.dump(model,'model3.pkl')
 
     # batch_size = [16, 32, 64]
     # epochs = [10,20,30,40,50]
