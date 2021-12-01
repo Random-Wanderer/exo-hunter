@@ -3,6 +3,7 @@ import formatter
 from numpy.core.getlimits import _KNOWN_TYPES
 from numpy.core.numeric import cross
 from tensorflow.keras.metrics import Recall, Precision
+from tensorflow.python.keras.metrics import accuracy
 from rnn_model import RNNModel
 from cnn_model import CNNModel
 from formatter import Formatter
@@ -13,10 +14,11 @@ from sklearn.ensemble import StackingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from sklearn.preprocessing import FunctionTransformer
-from sklearn.metrics import recall_score, precision_score
+from sklearn.metrics import recall_score, precision_score, accuracy_score
 from tensorflow.keras.optimizers import Adam
 from sklearn.model_selection import cross_validate
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
 import pandas as pd
@@ -30,8 +32,9 @@ class Trainer():
         """
         self.pipeline = None
         self.formatter = Formatter()
-        self.X_cnn = FunctionTransformer(lambda data: self.formatter.prep_data(data, rnn_model=False))
-        self.X_rnn = FunctionTransformer(lambda data: self.formatter.prep_data(data, rnn_model=True))
+        self.X_cnn = FunctionTransformer(lambda data: self.formatter.prep_data(data, rnn_model=False, gbc_model=True))
+        #self.X_rnn = FunctionTransformer(lambda data: self.formatter.prep_data(data, rnn_model=True))
+        #self.X_gbc = FunctionTransformer(lambda data: self.formatter.prep_data(data, rnn_model=False, gbc_model=True))
         self.X = X
         self.y = y
 
@@ -44,13 +47,13 @@ class Trainer():
 
         rnn_pipeline = Pipeline([
             ('rnn_preparation', self.X_cnn),
-            ('rnn_model', KNeighborsClassifier())
+            ('rnn_model', GradientBoostingClassifier(random_state=1,verbose=1))
         ])
 
         self.pipeline = StackingClassifier(
             estimators=[('cnn', cnn_pipeline),
                         ('rnn', rnn_pipeline)],
-            final_estimator=SVC(),
+            final_estimator= RandomForestClassifier(verbose=1),
             cv=2,
         )
 
@@ -62,7 +65,7 @@ class Trainer():
     def evaluate(self, X_test, y_test):
         """evaluates the pipeline on test data"""
         y_pred = self.pipeline.predict(X_test)
-        return recall_score(y_true=y_test,y_pred=y_pred), precision_score(y_true=y_test,y_pred=y_pred),y_pred#,y_prob
+        return recall_score(y_true=y_test,y_pred=y_pred), precision_score(y_true=y_test,y_pred=y_pred), accuracy_score(y_true=y_test,y_pred=y_pred)
 
 
 
@@ -91,5 +94,5 @@ if __name__ == "__main__":
     # cv = cross_validate(estimator=cnn,X=X,y=y,n_jobs=-1,cv=5)
     # print(cv['test_score'].mean())
     # evaluate
-    recall,precision,pred = trainer.evaluate(X_test=X_test,y_test=y_test)
-    print(recall,precision,pred)
+    recall,precision,accuracy = trainer.evaluate(X_test=X_test,y_test=y_test)
+    print(recall,precision,accuracy)
