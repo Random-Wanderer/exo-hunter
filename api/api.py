@@ -103,5 +103,6 @@ def predictid(inputdata:Kepid):
             "solar_radius": solar_radius,
             "orbital_period": orbital_period,
             "planet_star_rad": planet_star_dist,
-            "planet_radius": planet_radius
+            "planet_radius": planet_radius,
+            "light_curve_data": light_curve_data
             }
