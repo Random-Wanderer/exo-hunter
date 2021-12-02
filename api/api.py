@@ -52,7 +52,7 @@ def predictcurve(inputdata: ItemList):
     X_pred = X_pred.T
     X_pred = np.expand_dims(X_pred, axis=0)
     X_pred = np.expand_dims(X_pred, axis=-1)
-    pipeline = joblib.load("model2.pkl")
+    pipeline = joblib.load("model_for_cnn_r88_p64.pkl")
     y_pred = pipeline.predict(X_pred)
     prediction = y_pred[0]
     if prediction == 0:
@@ -85,7 +85,7 @@ def predictid(inputdata:Kepid):
     X_pred = X_pred.T
     X_pred = np.expand_dims(X_pred, axis=0)
     X_pred = np.expand_dims(X_pred, axis=-1)
-    pipeline = joblib.load("model2.pkl")
+    pipeline = joblib.load("model_for_cnn_r88_p64.pkl")
     y_pred = pipeline.predict(X_pred)
     prediction = y_pred[0]
     if prediction == 0:
