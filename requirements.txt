@@ -21,10 +21,10 @@ pytest
 yapf
 
 # API
-gcsfs
-google-cloud-storage
-mlflow
-s3fs
+# gcsfs
+# google-cloud-storage
+# mlflow
+# s3fs
 uvicorn
 fastapi
 
