@@ -3,6 +3,7 @@ FROM python:3.8-buster
 COPY api api
 COPY ExoHunter ExoHunter
 COPY model_for_cnn_r88_p64.pkl model_for_cnn_r88_p64.pkl
+COPY model2.pkl model2.pkl
 COPY requirements.txt requirements.txt
 
 RUN pip install --upgrade pip
