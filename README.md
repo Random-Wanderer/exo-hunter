@@ -6,6 +6,10 @@ https://github.com/lorcanob
 Our goal is to create a neural network that can either, take in raw data of light curves and help predict wheather or not there are exo-planets present, or a Kepler object identifier number and return data on that system and a manim graphic. The end product will be in the form of a streamlit website.
 
 
+![LoopOrbit_ManimCE_v0 12 0](https://user-images.githubusercontent.com/85910457/144986403-72fcfddc-fac9-4091-ba1e-963cbb6bac28.gif)
+
+
+
 # Data analysis
 - Document here the project: exo-hunter
 - Description: Project Description
