@@ -1,3 +1,11 @@
+# Exo-Hunter. Final project for Le Wagon batch #728
+Other contributors:
+https://github.com/Awle
+https://github.com/lorcanob
+
+Our goal is to create a neural network that can either, take in raw data of light curves and help predict wheather or not there are exo-planets present, or a Kepler object identifier number and return data on that system and a manim graphic. The end product will be in the form of a streamlit website.
+
+
 # Data analysis
 - Document here the project: exo-hunter
 - Description: Project Description
