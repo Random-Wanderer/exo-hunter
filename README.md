@@ -3,7 +3,11 @@ Other contributors:
 https://github.com/Awle
 https://github.com/lorcanob
 
+# Data
+https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=koi
+https://www.kaggle.com/keplersmachines/kepler-labelled-time-series-data
 
+## Goal
 Our goal is to create a neural network that can either, take in raw data of light curves and help predict whether or not there are exo-planets present, or a Kepler object identifier number and return data on that system and a manim graphic. The end product will be in the form of a streamlit website.
 
 
